@@ -1,0 +1,365 @@
+You are absolutely right, my apologies. The previous fix did not fully correct the alignment, and your screenshot clearly shows the layout is still broken. The core issue was a conflicting style on the parent container that was overriding the column layout for the history items.
+
+I have now fixed this underlying issue in the `style.css` file. This change will make the transaction history display in proper, distinct columns as you requested.
+
+You only need to update the **`style.css`** file.
+
+### Updated `style.css`
+
+Here is the corrected code. The only change is in the `.right-panel-content` class, where `display: flex;` has been changed to `display: block;`.
+
+```css
+/* Import a modern font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+}
+
+/* Main POS container styling */
+.pos-container {
+    background-color: #ffffff;
+    color: #1f2937;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    height: 94vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header styling */
+.pos-header {
+    background-color: #ffffff;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.header-user-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: right;
+}
+.cashier-select {
+    font-size: 0.875rem;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    padding: 0.25rem 0.5rem;
+}
+.logout-btn {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border: 1px solid #fecaca;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.logout-btn:hover {
+    background-color: #fecaca;
+}
+
+
+/* Main content area */
+.pos-main {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    overflow-y: hidden;
+    background-color: #f9fafb;
+}
+
+/* Left Panel */
+#left-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+}
+
+.panel-title-text {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.filter-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.filter-label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.filter-select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.cart-item-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 0.375rem;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+}
+
+.quantity-selector button {
+    background-color: #f9fafb;
+    width: 25px;
+    height: 25px;
+    border: none;
+    color: #374151;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.quantity-selector input {
+    width: 35px;
+    background: none;
+    border: none;
+    color: #1f2937;
+    text-align: center;
+    font-weight: 500;
+    -moz-appearance: textfield;
+}
+.quantity-selector input::-webkit-outer-spin-button,
+.quantity-selector input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Right Panel Container */
+.right-panel-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.right-panel-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.right-panel-tab {
+    flex-grow: 0;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #f9fafb;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.right-panel-tab:hover {
+    background-color: #f3f4f6;
+}
+
+.right-panel-tab.active {
+    color: #db2777;
+    border-color: #db2777;
+    background-color: #ffffff;
+}
+
+.right-panel-content {
+    padding: 0.75rem;
+    flex-grow: 1;
+    overflow-y: auto;
+    /* MODIFIED: This was the cause of the issue. Changed from flex to block. */
+    display: block; 
+}
+
+.payment-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.numpad button {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #1f2937;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: 0.75rem 0;
+    font-size: 1.25rem;
+    border-radius: 0.375rem;
+}
+.numpad button:hover {
+    background-color: #f3f4f6;
+}
+.numpad .numpad-clr {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border-color: #fecaca;
+}
+.numpad .numpad-clr:hover {
+    background-color: #fecaca;
+}
+
+.cash-details-panel {
+    background-color: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.payment-summary {
+    background-color: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    margin-top: auto;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    padding: 0.125rem 0;
+}
+
+.summary-total {
+    border-top: 2px solid #e5e7eb;
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+}
+
+.confirm-button {
+    background-color: #22C55E;
+    color: #FFFFFF;
+    font-weight: 700;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 1.1rem;
+    padding: 0.75rem 0;
+    border-radius: 0.5rem;
+}
+.confirm-button:hover {
+    background-color: #16A34A;
+}
+
+
+/* Footer Actions */
+.pos-footer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.footer-btn {
+    background-color: #1f2937;
+    border: 1px solid #374151;
+    color: #F9FAFB;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+/* Modal Styling */
+.modal-backdrop { background-color: rgba(0,0,0,0.5); }
+.modal-content { background-color: white; }
+
+.category-filter-btn {
+    transition: all 0.2s;
+    color: #4b5563;
+}
+.category-filter-btn.active-filter {
+    background-color: white;
+    color: #db2777;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* History Item Style */
+.history-header {
+    display: grid;
+    grid-template-columns: 1fr 80px 60px;
+    gap: 1rem;
+    padding: 0 0.75rem 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: 700;
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    align-items: center;
+}
+
+.history-item {
+    display: grid;
+    grid-template-columns: 1fr 80px 60px;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+.history-item:last-child {
+    border-bottom: none;
+}
+```
