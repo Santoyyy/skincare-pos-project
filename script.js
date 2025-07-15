@@ -1,4 +1,4 @@
-// --- CONSTANTS & STATE ---
+
 const EXCHANGE_RATE_RIEL = 4100;
 const TAX_RATE = 0.07;
 const CASHIERS = ['Heng', 'Chanthorn', 'Nida'];
@@ -15,7 +15,6 @@ let activeCategory = 'All';
 let numpadTarget = null;
 let sessionStartTime = null;
 
-// --- PRODUCT DATA ---
 const productDescriptions = {
     'The Ordinary Niacinamide 10% + Zinc 1%': 'A high-strength vitamin and mineral blemish formula that visibly regulates sebum and minimizes pores.',
     'The Ordinary Hyaluronic Acid 2% + B5': 'A hydrating formula with ultra-pure, vegan hyaluronic acid to attract up to 1,000 times its weight in water.',
@@ -69,7 +68,6 @@ const productDescriptions = {
     'COSRX Acne Pimple Master Patch': 'A hydrocolloid patch that protects wounded or troubled areas from getting worse and maintains humidity of skin.'
 };
 
-// NEW: Structured detailed information for all products.
 const productExtendedDetails = {
     "The Ordinary Niacinamide 10% + Zinc 1%": { targets: "Textural Irregularities, Dryness, Dullness, Visible Shine, Signs of Congestion", suited_to: "All Skin Types", format: "Serum: Water-Based", key_ingredients: "Niacinamide, Zinc PCA" },
     "The Ordinary Hyaluronic Acid 2% + B5": { targets: "Dryness, Signs of Aging", suited_to: "All Skin Types", format: "Water-based Serum", key_ingredients: "Hyaluronic Acid, Ceramides, Pro-vitamin B5" },
@@ -123,21 +121,19 @@ const productExtendedDetails = {
     "COSRX Acne Pimple Master Patch": { targets: "Active Acne, Blemishes, Wound Protection", suited_to: "All Skin Types", format: "Hydrocolloid Patch", key_ingredients: "Hydrocolloid" }
 };
 
-// --- INITIALIZATION ---
 window.onload = () => {
     initializeApp();
     updateTime();
     setInterval(updateTime, 1000);
 };
     window.addEventListener('keydown', (event) => {
-        // Only run this code if the numpad target (e.g., Cash Received input) is active
+        
         if (!numpadTarget) {
             return;
         }
 
-        // Check which key was pressed and call the correct function
         if (event.key >= '0' && event.key <= '9') {
-            event.preventDefault(); // Prevent the key from being typed elsewhere
+            event.preventDefault(); 
             numpadInput(event.key);
         } else if (event.key === '.') {
             event.preventDefault();
@@ -146,7 +142,7 @@ window.onload = () => {
             event.preventDefault();
             numpadBackspace();
         } else if (event.key === 'Escape' || event.key.toLowerCase() === 'c') {
-            // Use Escape or 'c' to clear the input, like the CLR button
+            
             event.preventDefault();
             numpadClear();
         }
@@ -166,7 +162,6 @@ async function initializeApp() {
         categories = await categoriesResponse.json();
         salesHistory = await salesResponse.json();
 
-        // MODIFICATION: Merge all details into the product data
         products.forEach(p => {
             if (productDescriptions[p.name]) {
                 p.description = productDescriptions[p.name];
@@ -200,7 +195,6 @@ function updateTime() {
     }
 }
 
-// --- UI RENDER FUNCTIONS ---
 function renderCart() {
     const panelHeader = document.getElementById('left-panel-header');
     panelHeader.innerHTML = `<h2 id="left-panel-title" class="panel-title-text">YOUR SHOPPING BAG</h2>`;
@@ -312,9 +306,7 @@ function renderDetailedList(productsToRender) {
     }).join('')}</div>`;
 }
 
-/**
- * Filters the detailed product list based on search, brand, and category.
- */
+ 
 function filterDetailedView() {
     const searchTerm = document.getElementById('detailed-search-input').value.toLowerCase();
     const selectedBrandName = document.getElementById('detailed-brand-select').value;
@@ -345,9 +337,7 @@ function filterDetailedView() {
     renderDetailedList(filteredProducts);
 }
 
-/**
- * Sets up the detailed view with search and filter controls.
- */
+
 function renderProductDetailedView() {
     const panelHeader = document.getElementById('left-panel-header');
     document.getElementById('product-browser-controls').classList.add('hidden');
@@ -374,9 +364,7 @@ function renderProductDetailedView() {
     renderDetailedList(products);
 }
 
-/**
- * Sets up the main "selling" view with product grid and category filters.
- */
+
 function showProductBrowser() {
     const panelHeader = document.getElementById('left-panel-header');
     panelHeader.innerHTML = `
@@ -423,9 +411,7 @@ function showProductBrowser() {
     setCategoryFilter(activeCategory);
 }
 
-/**
- * Handles clicks on the CATEGORY filter tabs only.
- */
+
 function setCategoryFilter(categoryName) {
     activeCategory = categoryName;
     document.querySelectorAll('.category-filter-btn').forEach(btn => {
@@ -524,7 +510,6 @@ function showRightPanelTab(tabName) {
 }
 
 
-// --- CART ACTIONS ---
 function addToCart(productId) {
     const product = products.find(p => p.product_id === productId);
     if (!product) return;
@@ -569,7 +554,6 @@ function removeFromCart(productId) {
     renderSummary();
 }
 
-// --- PAYMENT & SALE LOGIC ---
 function setupPaymentMethodListener() {
     const paymentMethodSelect = document.getElementById('payment-method');
     const cashDetailsPanel = document.getElementById('cash-details-panel');
@@ -605,10 +589,10 @@ function handlePayment() {
             showInfoModal('Please enter the correct amount of cash received.');
             return;
         }
-        // If cash is sufficient, finalize the sale immediately.
+        
         finalizeSale();
     } else {
-        // For other methods (ABA, ACLEDA), show the QR code for confirmation.
+       
         showQrCodeModal();
     }
 }
@@ -667,7 +651,7 @@ async function finalizeSale() {
         });
 
         if (!response.ok) {
-            // This will trigger the "Could not save..." error if the server is not running
+          
             throw new Error('Failed to save the sale.');
         }
 
@@ -688,20 +672,17 @@ async function finalizeSale() {
         document.getElementById('main-cash-received').value = '';
         showProductBrowser();
         renderSummary();
-        closeModal('qrCodeModal'); // Close the QR modal if it was open
+        closeModal('qrCodeModal'); 
 
     } catch (error) {
         console.error("Error during finalizeSale:", error);
-        // This is where the error modal is triggered
+   
         showInfoModal('Error: Could not save the transaction to the server.');
     }
 }
 
 
-/**
- * CORRECTED: Fixes a bug where the total in Riel was calculated using the
- * wrong variable name, causing the script to crash.
- */
+
 function displayReceipt(saleData) {
     const receiptContent = document.getElementById('receiptContent');
     const subtotal = saleData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -732,7 +713,7 @@ function displayReceipt(saleData) {
     openModal('receiptModal');
 }   
 
-// --- REPORT, VOID, RETURN & LOGOUT FUNCTIONS ---
+
 
 function showEndSessionReport() {
     const cashier = document.getElementById('cashier-select').value;
@@ -821,8 +802,6 @@ function logOut() {
     sessionStartTime = new Date();
 }
 
-
-// --- NUMPAD & MODAL LOGIC ---
 function numpadInput(value) {
     if (numpadTarget) {
         if (value === '.' && numpadTarget.value.includes('.')) return;
